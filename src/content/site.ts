@@ -20,6 +20,7 @@ export const siteContent: SiteContent = {
   brand: "TEST APP",
   nav: [
     { label: "Home", href: "#home" },
+    { label: "Product", href: "#product" },
     { label: "About", href: "#about" },
   ],
   heroTitle: "Website + AI chatroom dalam satu tempat.",
@@ -30,6 +31,11 @@ export const siteContent: SiteContent = {
   themeToggleLight: "Mode terang",
   themeToggleDark: "Mode gelap",
   sections: [
+    {
+      id: "product",
+      title: "Product",
+      body: "Jelajahi produk kami — solusi yang dirancang untuk kebutuhan Anda.",
+    },
     {
       id: "about",
       title: "About",
