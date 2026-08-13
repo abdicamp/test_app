@@ -236,6 +236,7 @@ export function ChatRoom() {
           border-radius: 10px;
           padding: 8px 10px;
           cursor: pointer;
+          color: var(--ink);
         }
         .badge {
           border-radius: 12px;

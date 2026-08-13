@@ -23,7 +23,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className={`${outfit.variable} ${syne.variable} h-full`}>
+    <html
+      lang="id"
+      className={`${outfit.variable} ${syne.variable} h-full`}
+      suppressHydrationWarning
+    >
       <head>
         <script
           dangerouslySetInnerHTML={{

@@ -1,95 +1,63 @@
 "use client";
 
-import { siteContent } from "@/content/site";
 import { useEffect, useState } from "react";
+import { siteContent } from "@/content/site";
 
 const STORAGE_KEY = "lumen.theme";
 
 type Theme = "light" | "dark";
 
-function getPreferredTheme(): Theme {
-  if (typeof window === "undefined") return "light";
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored === "light" || stored === "dark") return stored;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
-}
-
 function applyTheme(theme: Theme) {
-  document.documentElement.setAttribute(
-    "data-theme",
-    theme === "dark" ? "dark" : "light",
-  );
+  document.documentElement.dataset.theme = theme;
 }
 
 export function ThemeToggle() {
   const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
-    const next = getPreferredTheme();
-    setTheme(next);
-    applyTheme(next);
+    const stored = localStorage.getItem(STORAGE_KEY);
+    const initial: Theme =
+      stored === "dark" || stored === "light"
+        ? stored
+        : window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light";
+    setTheme(initial);
+    applyTheme(initial);
   }, []);
 
   function toggle() {
-    const next: Theme = theme === "dark" ? "light" : "dark";
+    const next: Theme = theme === "light" ? "dark" : "light";
+    setTheme(next);
     localStorage.setItem(STORAGE_KEY, next);
     applyTheme(next);
-    setTheme(next);
   }
-
-  const label =
-    theme === "dark"
-      ? siteContent.themeToggleLight
-      : siteContent.themeToggleDark;
 
   return (
     <button
       type="button"
       className="theme-toggle"
       onClick={toggle}
-      aria-label={label}
-      title={label}
+      aria-label={theme === "light" ? siteContent.themeToggleDark : siteContent.themeToggleLight}
+      title={theme === "light" ? siteContent.themeToggleDark : siteContent.themeToggleLight}
     >
-      <span className="icon" aria-hidden="true">
-        {theme === "dark" ? "☀" : "☾"}
-      </span>
-      <span className="label">{label}</span>
+      {theme === "light" ? siteContent.themeToggleDark : siteContent.themeToggleLight}
       <style jsx>{`
         .theme-toggle {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
           border: 1px solid var(--line);
-          background: var(--surface-solid);
+          background: var(--surface);
           color: var(--ink);
-          border-radius: 12px;
+          border-radius: 10px;
           padding: 8px 12px;
           font: inherit;
           font-size: 13px;
           font-weight: 600;
           cursor: pointer;
-          transition:
-            background 0.2s ease,
-            border-color 0.2s ease,
-            color 0.2s ease;
+          white-space: nowrap;
         }
         .theme-toggle:hover {
           border-color: var(--teal);
           color: var(--teal);
-        }
-        .icon {
-          font-size: 16px;
-          line-height: 1;
-        }
-        @media (max-width: 640px) {
-          .label {
-            display: none;
-          }
-          .theme-toggle {
-            padding: 8px 10px;
-          }
         }
       `}</style>
     </button>

@@ -11,13 +11,14 @@
   --white: #fffff8;
   --surface: rgba(255, 255, 248, 0.92);
   --surface-solid: #fffff8;
-  --human-bubble-bg: #102a2e;
-  --human-bubble-fg: #fffff8;
+  --surface-muted: rgba(31, 111, 120, 0.12);
+  --process-bg: rgba(31, 111, 120, 0.12);
+  --human-bubble-bg: var(--ink);
+  --human-bubble-fg: var(--white);
   --badge-busy-bg: #ffe8e4;
   --error-bg: #ffe8e4;
   --error-border: #f3c2b8;
-  --process-bg: rgba(31, 111, 120, 0.12);
-  --page-bg:
+  --body-bg:
     radial-gradient(circle at 85% 8%, rgba(228, 87, 61, 0.14), transparent 42%),
     radial-gradient(circle at 8% 78%, rgba(31, 111, 120, 0.12), transparent 40%),
     linear-gradient(160deg, #ddece9, var(--mist) 45%, var(--parchment));
@@ -25,27 +26,28 @@
 
 [data-theme="dark"] {
   --ink: #e7f0ee;
-  --ink-soft: #a8bdbf;
+  --ink-soft: #9ab5b8;
   --mist: #152428;
-  --parchment: #0c1a1d;
-  --coral: #f06b52;
+  --parchment: #0f1c1f;
+  --coral: #f06a52;
   --coral-deep: #ff8a75;
-  --teal: #6ec8d4;
-  --teal-soft: rgba(110, 200, 212, 0.18);
+  --teal: #5ec4cf;
+  --teal-soft: rgba(94, 196, 207, 0.16);
   --line: rgba(231, 240, 238, 0.14);
-  --white: #1e3337;
-  --surface: rgba(22, 38, 42, 0.94);
-  --surface-solid: #1e3337;
-  --human-bubble-bg: #6ec8d4;
-  --human-bubble-fg: #0c1a1d;
-  --badge-busy-bg: rgba(240, 107, 82, 0.22);
-  --error-bg: rgba(240, 107, 82, 0.18);
-  --error-border: rgba(240, 107, 82, 0.4);
-  --process-bg: rgba(110, 200, 212, 0.16);
-  --page-bg:
-    radial-gradient(circle at 85% 8%, rgba(240, 107, 82, 0.12), transparent 42%),
-    radial-gradient(circle at 8% 78%, rgba(110, 200, 212, 0.1), transparent 40%),
-    linear-gradient(160deg, #0f2226, var(--mist) 45%, var(--parchment));
+  --white: #1a2a2e;
+  --surface: rgba(21, 36, 40, 0.94);
+  --surface-solid: #1a2a2e;
+  --surface-muted: rgba(94, 196, 207, 0.12);
+  --process-bg: rgba(94, 196, 207, 0.12);
+  --human-bubble-bg: #2a4549;
+  --human-bubble-fg: #e7f0ee;
+  --badge-busy-bg: rgba(240, 106, 82, 0.18);
+  --error-bg: rgba(240, 106, 82, 0.16);
+  --error-border: rgba(240, 106, 82, 0.35);
+  --body-bg:
+    radial-gradient(circle at 85% 8%, rgba(240, 106, 82, 0.12), transparent 42%),
+    radial-gradient(circle at 8% 78%, rgba(94, 196, 207, 0.1), transparent 40%),
+    linear-gradient(160deg, #0a1214, var(--parchment) 45%, #152428);
 }
 
 * {
@@ -61,7 +63,7 @@ body {
 body {
   color: var(--ink);
   font-family: var(--font-outfit), system-ui, sans-serif;
-  background: var(--page-bg);
+  background: var(--body-bg);
   transition:
     background 0.25s ease,
     color 0.25s ease;
