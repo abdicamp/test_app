@@ -7,10 +7,12 @@ type ChatMessage = {
   role: "human" | "ai";
   text: string;
   error?: boolean;
+  success?: boolean;
 };
 
 const AGENT_KEY = "lumen.agentId";
 const AGENT_URL_KEY = "lumen.agentUrl";
+const FLASH_KEY = "lumen.successFlash";
 
 function cleanChatReply(raw: string) {
   let text = raw
@@ -31,6 +33,27 @@ function cleanChatReply(raw: string) {
   return text || "Selesai.";
 }
 
+function hasCodeChanges(
+  data: { git?: { branches?: unknown[] }; result?: string },
+  reply: string,
+) {
+  const branches = data.git?.branches;
+  if (Array.isArray(branches) && branches.length > 0) return true;
+
+  const lower = reply.toLowerCase();
+  if (
+    /tidak mengubah|belum mengubah|tanpa mengubah|no code change|hanya menyapa|tidak ada perubahan/.test(
+      lower,
+    )
+  ) {
+    return false;
+  }
+
+  return /ditambahkan|diubah|diperbarui|updated|added|changed|menu|section|hero|nav/.test(
+    lower,
+  );
+}
+
 export function ChatRoom() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -44,10 +67,24 @@ export function ChatRoom() {
   const [sending, setSending] = useState(false);
   const [status, setStatus] = useState("");
   const [agentId, setAgentId] = useState<string | null>(null);
+  const [reloadNotice, setReloadNotice] = useState("");
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setAgentId(sessionStorage.getItem(AGENT_KEY));
+    const flash = sessionStorage.getItem(FLASH_KEY);
+    if (flash) {
+      sessionStorage.removeItem(FLASH_KEY);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `flash-${Date.now()}`,
+          role: "ai",
+          text: flash,
+          success: true,
+        },
+      ]);
+    }
   }, []);
 
   useEffect(() => {
@@ -55,7 +92,7 @@ export function ChatRoom() {
       top: listRef.current.scrollHeight,
       behavior: "smooth",
     });
-  }, [messages, status]);
+  }, [messages, status, reloadNotice]);
 
   async function pollRun(nextAgentId: string, runId: string) {
     const started = Date.now();
@@ -72,15 +109,45 @@ export function ChatRoom() {
         if (data.status !== "FINISHED") {
           throw new Error(data.result || `Run ${data.status}`);
         }
-        const raw =
-          (data.result as string)?.trim() ||
-          "Selesai.";
-        return cleanChatReply(raw);
+        const reply = cleanChatReply((data.result as string)?.trim() || "Selesai.");
+        return {
+          reply,
+          changed: hasCodeChanges(data, reply),
+        };
       }
 
       await new Promise((r) => setTimeout(r, 3000));
     }
     throw new Error("Timeout menunggu Cloud Agent");
+  }
+
+  async function handleSuccessfulChange(pendingId: string, reply: string) {
+    const successText =
+      `${reply}\n\n✅ Perubahan berhasil diterapkan ke website.` +
+      `\nHalaman akan dimuat ulang agar perubahan terlihat.`;
+
+    setMessages((prev) =>
+      prev.map((m) =>
+        m.id === pendingId
+          ? { ...m, text: successText, success: true }
+          : m,
+      ),
+    );
+
+    sessionStorage.setItem(
+      FLASH_KEY,
+      "✅ Perubahan sebelumnya berhasil. Website sudah diperbarui.",
+    );
+
+    for (let sec = 5; sec >= 1; sec--) {
+      setReloadNotice(`Memuat ulang dalam ${sec} detik…`);
+      await new Promise((r) => setTimeout(r, 1000));
+    }
+
+    setReloadNotice("Memuat ulang halaman…");
+    const url = new URL(window.location.href);
+    url.searchParams.set("updated", String(Date.now()));
+    window.location.replace(url.toString());
   }
 
   async function onSubmit(e: FormEvent) {
@@ -102,6 +169,7 @@ export function ChatRoom() {
     setInput("");
     setSending(true);
     setStatus("CREATING");
+    setReloadNotice("");
 
     try {
       const currentAgentId = sessionStorage.getItem(AGENT_KEY);
@@ -124,7 +192,13 @@ export function ChatRoom() {
         sessionStorage.setItem(AGENT_URL_KEY, data.agentUrl);
       }
 
-      const reply = await pollRun(data.agentId, data.runId);
+      const { reply, changed } = await pollRun(data.agentId, data.runId);
+
+      if (changed) {
+        await handleSuccessfulChange(pendingId, reply);
+        return;
+      }
+
       setMessages((prev) =>
         prev.map((m) => (m.id === pendingId ? { ...m, text: reply } : m)),
       );
@@ -172,6 +246,8 @@ export function ChatRoom() {
         <div className="process">Cloud Agent · {status || "RUNNING"}</div>
       ) : null}
 
+      {reloadNotice ? <div className="success-banner">{reloadNotice}</div> : null}
+
       <div className="messages" ref={listRef}>
         {messages.map((m) => (
           <div
@@ -179,7 +255,9 @@ export function ChatRoom() {
             className={`bubble-wrap ${m.role === "human" ? "right" : "left"}`}
           >
             <div className="who">{m.role === "human" ? "You" : "Lumen"}</div>
-            <div className={`bubble ${m.error ? "error" : ""} ${m.role}`}>
+            <div
+              className={`bubble ${m.error ? "error" : ""} ${m.success ? "success" : ""} ${m.role}`}
+            >
               {m.text || (sending ? "Sedang memproses…" : "…")}
             </div>
           </div>
@@ -191,9 +269,9 @@ export function ChatRoom() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder='Contoh: tambahkan menu Product…'
-          disabled={sending}
+          disabled={sending || Boolean(reloadNotice)}
         />
-        <button type="submit" disabled={sending || !input.trim()}>
+        <button type="submit" disabled={sending || !input.trim() || Boolean(reloadNotice)}>
           ↑
         </button>
       </form>
@@ -262,6 +340,15 @@ export function ChatRoom() {
           font-size: 13px;
           font-weight: 600;
         }
+        .success-banner {
+          margin: 10px 14px 0;
+          padding: 10px 12px;
+          border-radius: 12px;
+          background: #e7f6ef;
+          color: #1f6f48;
+          font-size: 13px;
+          font-weight: 700;
+        }
         .messages {
           flex: 1;
           overflow: auto;
@@ -308,6 +395,11 @@ export function ChatRoom() {
           background: var(--error-bg);
           color: var(--coral-deep);
           border: 1px solid var(--error-border);
+        }
+        .bubble.success {
+          background: #e7f6ef;
+          color: #1f6f48;
+          border: 1px solid #b7e0c8;
         }
         .composer {
           display: flex;
