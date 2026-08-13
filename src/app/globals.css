@@ -1,26 +1,41 @@
-@import "tailwindcss";
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ink: #102a2e;
+  --ink-soft: #3a5559;
+  --mist: #e7f0ee;
+  --parchment: #f6f1e8;
+  --coral: #e4573d;
+  --coral-deep: #c53e28;
+  --teal: #1f6f78;
+  --teal-soft: #d5e8e6;
+  --line: rgba(16, 42, 46, 0.2);
+  --white: #fffff8;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  margin: 0;
+  min-height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--ink);
+  font-family: var(--font-outfit), system-ui, sans-serif;
+  background:
+    radial-gradient(circle at 85% 8%, rgba(228, 87, 61, 0.14), transparent 42%),
+    radial-gradient(circle at 8% 78%, rgba(31, 111, 120, 0.12), transparent 40%),
+    linear-gradient(160deg, #ddece9, var(--mist) 45%, var(--parchment));
+}
+
+h1,
+h2,
+.brand {
+  font-family: var(--font-syne), Georgia, serif;
+}
+
+a {
+  color: inherit;
 }
