@@ -11,6 +11,8 @@ export type SiteContent = {
   heroBody: string;
   ctaLabel: string;
   ctaHref: string;
+  themeToggleLight: string;
+  themeToggleDark: string;
   sections: { id: string; title: string; body: string }[];
 };
 
@@ -25,6 +27,8 @@ export const siteContent: SiteContent = {
     "Ketik perintah di panel chat. Cursor Cloud Agent akan mengedit source repo ini, push ke main, lalu Vercel me-refresh website.",
   ctaLabel: "Lihat chat",
   ctaHref: "#chat",
+  themeToggleLight: "Mode terang",
+  themeToggleDark: "Mode gelap",
   sections: [
     {
       id: "about",

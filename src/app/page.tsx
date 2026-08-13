@@ -1,4 +1,5 @@
 import { ChatRoom } from "@/components/ChatRoom";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { siteContent } from "@/content/site";
 
 export default function HomePage() {
@@ -6,13 +7,16 @@ export default function HomePage() {
     <div className="page">
       <header className="top">
         <div className="brand">{siteContent.brand}</div>
-        <nav>
-          {siteContent.nav.map((item) => (
-            <a key={item.href + item.label} href={item.href}>
-              {item.label}
-            </a>
-          ))}
-        </nav>
+        <div className="top-actions">
+          <nav>
+            {siteContent.nav.map((item) => (
+              <a key={item.href + item.label} href={item.href}>
+                {item.label}
+              </a>
+            ))}
+          </nav>
+          <ThemeToggle />
+        </div>
       </header>
 
       <main>
@@ -51,6 +55,12 @@ export default function HomePage() {
           font-size: 24px;
           letter-spacing: 0.12em;
           font-weight: 700;
+        }
+        .top-actions {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          flex-wrap: wrap;
         }
         nav {
           display: flex;

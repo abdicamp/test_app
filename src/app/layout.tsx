@@ -24,6 +24,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className={`${outfit.variable} ${syne.variable} h-full`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("lumen.theme");var d=t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.setAttribute("data-theme",d?"dark":"light");}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-full antialiased">{children}</body>
     </html>
   );

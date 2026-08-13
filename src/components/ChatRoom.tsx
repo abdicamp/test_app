@@ -203,7 +203,7 @@ export function ChatRoom() {
           display: flex;
           flex-direction: column;
           height: min(78vh, 760px);
-          background: rgba(255, 255, 248, 0.92);
+          background: var(--surface);
           border: 1px solid var(--line);
           border-radius: 22px;
           overflow: hidden;
@@ -249,14 +249,14 @@ export function ChatRoom() {
           color: var(--teal);
         }
         .badge.busy {
-          background: #ffe8e4;
+          background: var(--badge-busy-bg);
           color: var(--coral-deep);
         }
         .process {
           margin: 10px 14px 0;
           padding: 10px 12px;
           border-radius: 12px;
-          background: rgba(31, 111, 120, 0.12);
+          background: var(--process-bg);
           color: var(--teal);
           font-size: 13px;
           font-weight: 600;
@@ -299,14 +299,14 @@ export function ChatRoom() {
           border-bottom-left-radius: 6px;
         }
         .bubble.human {
-          background: var(--ink);
-          color: var(--white);
+          background: var(--human-bubble-bg);
+          color: var(--human-bubble-fg);
           border-bottom-right-radius: 6px;
         }
         .bubble.error {
-          background: #ffe8e4;
+          background: var(--error-bg);
           color: var(--coral-deep);
-          border: 1px solid #f3c2b8;
+          border: 1px solid var(--error-border);
         }
         .composer {
           display: flex;
@@ -320,7 +320,8 @@ export function ChatRoom() {
           border-radius: 16px;
           padding: 14px 16px;
           font: inherit;
-          background: var(--white);
+          background: var(--surface-solid);
+          color: var(--ink);
         }
         .composer button {
           width: 52px;

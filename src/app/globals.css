@@ -9,6 +9,43 @@
   --teal-soft: #d5e8e6;
   --line: rgba(16, 42, 46, 0.2);
   --white: #fffff8;
+  --surface: rgba(255, 255, 248, 0.92);
+  --surface-solid: #fffff8;
+  --human-bubble-bg: #102a2e;
+  --human-bubble-fg: #fffff8;
+  --badge-busy-bg: #ffe8e4;
+  --error-bg: #ffe8e4;
+  --error-border: #f3c2b8;
+  --process-bg: rgba(31, 111, 120, 0.12);
+  --page-bg:
+    radial-gradient(circle at 85% 8%, rgba(228, 87, 61, 0.14), transparent 42%),
+    radial-gradient(circle at 8% 78%, rgba(31, 111, 120, 0.12), transparent 40%),
+    linear-gradient(160deg, #ddece9, var(--mist) 45%, var(--parchment));
+}
+
+[data-theme="dark"] {
+  --ink: #e7f0ee;
+  --ink-soft: #a8bdbf;
+  --mist: #152428;
+  --parchment: #0c1a1d;
+  --coral: #f06b52;
+  --coral-deep: #ff8a75;
+  --teal: #6ec8d4;
+  --teal-soft: rgba(110, 200, 212, 0.18);
+  --line: rgba(231, 240, 238, 0.14);
+  --white: #1e3337;
+  --surface: rgba(22, 38, 42, 0.94);
+  --surface-solid: #1e3337;
+  --human-bubble-bg: #6ec8d4;
+  --human-bubble-fg: #0c1a1d;
+  --badge-busy-bg: rgba(240, 107, 82, 0.22);
+  --error-bg: rgba(240, 107, 82, 0.18);
+  --error-border: rgba(240, 107, 82, 0.4);
+  --process-bg: rgba(110, 200, 212, 0.16);
+  --page-bg:
+    radial-gradient(circle at 85% 8%, rgba(240, 107, 82, 0.12), transparent 42%),
+    radial-gradient(circle at 8% 78%, rgba(110, 200, 212, 0.1), transparent 40%),
+    linear-gradient(160deg, #0f2226, var(--mist) 45%, var(--parchment));
 }
 
 * {
@@ -24,10 +61,10 @@ body {
 body {
   color: var(--ink);
   font-family: var(--font-outfit), system-ui, sans-serif;
-  background:
-    radial-gradient(circle at 85% 8%, rgba(228, 87, 61, 0.14), transparent 42%),
-    radial-gradient(circle at 8% 78%, rgba(31, 111, 120, 0.12), transparent 40%),
-    linear-gradient(160deg, #ddece9, var(--mist) 45%, var(--parchment));
+  background: var(--page-bg);
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
 }
 
 h1,
