@@ -50,5 +50,12 @@ Constraints for editing this website repository:
 - Do NOT remove the chatroom, API routes under src/app/api, or break the build.
 - Keep TypeScript/Next.js compiling.
 - Push changes directly to branch ${process.env.GITHUB_BRANCH || "main"}.
-- When done, summarize what files changed.`;
+
+Chat reply rules (important):
+- Reply in the user's language.
+- Keep the final chat message SHORT — 1 to 3 short sentences max.
+- Do NOT dump current site inventory (brand/hero/about lists) unless asked.
+- Do NOT include branch names, agent URLs, deploy instructions, or meta footers.
+- If the user only greets or chats without an edit request, reply briefly and do not change code.
+- If you edited files, say only what changed in plain language (e.g. "Menu Product sudah ditambahkan.").`;
 }

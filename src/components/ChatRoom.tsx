@@ -12,6 +12,25 @@ type ChatMessage = {
 const AGENT_KEY = "lumen.agentId";
 const AGENT_URL_KEY = "lumen.agentUrl";
 
+function cleanChatReply(raw: string) {
+  let text = raw
+    .replace(/<\/?thinking>/gi, "")
+    .replace(/<\/?think>/gi, "")
+    .replace(/^Branch:.*$/gim, "")
+    .replace(/^Agent:.*$/gim, "")
+    .replace(/^Repo:.*$/gim, "")
+    .replace(/^Refresh website.*$/gim, "")
+    .replace(/^Vercel akan.*$/gim, "")
+    .trim();
+
+  const closeIdx = text.toLowerCase().lastIndexOf("</thinking>");
+  if (closeIdx !== -1) {
+    text = text.slice(closeIdx + "</thinking>".length).trim();
+  }
+
+  return text || "Selesai.";
+}
+
 export function ChatRoom() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -53,11 +72,10 @@ export function ChatRoom() {
         if (data.status !== "FINISHED") {
           throw new Error(data.result || `Run ${data.status}`);
         }
-        const result =
+        const raw =
           (data.result as string)?.trim() ||
-          "Selesai. Perubahan sudah di-push ke main. Refresh halaman setelah Vercel deploy.";
-        const agentUrl = sessionStorage.getItem(AGENT_URL_KEY);
-        return `${result}\n\nBranch: main\n${agentUrl ? `Agent: ${agentUrl}` : ""}\nRefresh website setelah deploy Vercel selesai.`.trim();
+          "Selesai.";
+        return cleanChatReply(raw);
       }
 
       await new Promise((r) => setTimeout(r, 3000));
